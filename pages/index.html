@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasker</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+
+        <ul id="v-for-object" class="demo">
+            <li v-for="value in res">
+              {{ value.Cur_Name }}
+            </li>
+          </ul>
+        
+    </div>
+
+ 
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+
+        data: {
+            message: 'Hello Vue!',
+            res: '1'
+        },
+        async created() {
+           
+            this.res = await this.getA()
+            console.log(typeof(this.res))
+        },
+        methods: {
+            getA: async () => {
+                let res = await fetch('http://www.nbrb.by/api/exrates/rates?periodicity=0')
+                let data = await res.json();
+                return data
+            },
+            getB: () => {
+                console.log(3)
+            }
+        }
+    })
+
+</script>
+
+</html>

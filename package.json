@@ -1,0 +1,27 @@
+{
+  "name": "tasker",
+  "version": "1.0.0",
+  "description": "task-app",
+  "main": "index.js",
+  "scripts": {
+    "prod": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artemij-petrovskij/Tasker.git"
+  },
+  "author": "artemij-petrovskij",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/artemij-petrovskij/Tasker/issues"
+  },
+  "homepage": "https://github.com/artemij-petrovskij/Tasker#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.22"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
