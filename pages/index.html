@@ -10,39 +10,85 @@
 
 <body>
     <div id="app">
-        {{ message }}
+        <p v-if="errors.length">
+            <b>Пожалуйста исправьте указанные ошибки:</b>
+        <ul>
+            <li v-for="error in errors">{{ error }}</li>
+        </ul>
+        </p>
 
+        <form action="/addTask" method="post">
+            <input type="text" v-model="label" name="label">
+            <input type="text" v-model="text" name="text">
+            <input type="button" @click="checkForm">
+        </form>
         <ul id="v-for-object" class="demo">
             <li v-for="value in res">
-              {{ value.Cur_Name }}
+                {{ value.label }}
+                {{ value.text }}
             </li>
-          </ul>
-        
+        </ul>
+
     </div>
 
- 
+
 </body>
 <script>
     var app = new Vue({
         el: '#app',
 
         data: {
-            message: 'Hello Vue!',
-            res: '1'
+            errors: [],
+            res: '1',
+            label: '',
+            text: ''
         },
         async created() {
-           
             this.res = await this.getA()
-            console.log(typeof(this.res))
         },
         methods: {
-            getA: async () => {
-                let res = await fetch('http://www.nbrb.by/api/exrates/rates?periodicity=0')
+            getA: async function () {
+                let res = await fetch('/getTasks')
                 let data = await res.json();
                 return data
             },
             getB: () => {
                 console.log(3)
+            },
+            sendData: function (label, text) {
+
+                let dat = { label: label, text: text }
+                fetch('/api/addTask', {
+                    method: 'POST',
+                    body: JSON.stringify(dat),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                this.getData()
+
+            },
+            getData: async function () {
+                this.res = await this.getA()
+            },
+            checkForm: function (e) {
+
+                if (this.label && this.text) {
+                    this.sendData(this.label, this.text)
+                    this.errors = [];
+
+                }
+
+                this.errors = [];
+
+                if (!this.label) {
+                    this.errors.push('Требуется указать имя.');
+                }
+                if (!this.text) {
+                    this.errors.push('Требуется указать возраст.');
+                }
+
+                e.preventDefault();
             }
         }
     })
