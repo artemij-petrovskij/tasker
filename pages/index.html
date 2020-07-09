@@ -5,48 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasker</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <p v-if="errors.length">
-            <b>Пожалуйста исправьте указанные ошибки:</b>
-        <ul>
-            <li v-for="error in errors">{{ error }}</li>
-        </ul>
-        </p>
+    <el-container id="app">
 
-        <form action="/addTask" method="post">
-            <input type="text" v-model="label" name="label">
-            <input type="text" v-model="text" name="text">
-            <input type="button" @click="checkForm">
-        </form>
-        <ul id="v-for-object" class="demo">
-            <li v-for="value in res">
-                {{ value.label }}
-                {{ value.text }}
-            </li>
-        </ul>
+        <el-header>Header</el-header>
+        <el-main>
 
-    </div>
+            <el-form style="width: 500px;position: relative;margin:0px auto;">
+                <el-form-item label="Название">
+                    <el-input v-model="controls.label" name="label"></el-input>
+                </el-form-item>
+                <el-form-item label="Описание задачи">
+                    <el-input v-model="controls.text" name="text"></el-input>
+                </el-form-item>
+                <el-button type="primary" @click="checkForm">Task!</el-button>
+            </el-form>
 
+
+            <div v-for="value in res" class="text item">
+                <el-card class="box-card">
+                    {{ value.label }}
+                    {{ value.text }}
+                </el-card>
+            </div>
+
+
+
+
+            <el-main>
+    </el-container>
 
 </body>
 <script>
     var app = new Vue({
         el: '#app',
-
         data: {
-            errors: [],
-            res: '1',
-            label: '',
-            text: ''
+            res: '',
+            controls: {
+                login: "",
+                password: ""
+            }
         },
         async created() {
             this.res = await this.getA()
         },
         methods: {
+            eMessage(err) {
+                this.$message(err);
+            },
             getA: async function () {
                 let res = await fetch('/getTasks')
                 let data = await res.json();
@@ -73,21 +84,19 @@
             },
             checkForm: function (e) {
 
-                if (this.label && this.text) {
-                    this.sendData(this.label, this.text)
-                    this.errors = [];
-
+                if (this.controls.label && this.controls.text) {
+                    this.sendData(this.controls.label, this.controls.text)
                 }
-
-                this.errors = [];
-
-                if (!this.label) {
-                    this.errors.push('Требуется указать имя.');
+                if (!this.controls.label && !this.text) {
+                    this.eMessage('Заполните форму')
+                    return
                 }
-                if (!this.text) {
-                    this.errors.push('Требуется указать возраст.');
+                if (!this.controls.label) {
+                    this.eMessage('Введите название задачи')
                 }
-
+                if (!this.controls.text) {
+                    this.eMessage('Введите название задачи')
+                }
                 e.preventDefault();
             }
         }
