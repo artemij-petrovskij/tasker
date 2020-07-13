@@ -9,46 +9,17 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Podkova:wght@500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Podkova', serif;
-        }
-
-        #app {
-            width: 100%;
-        }
-
-        .tasks {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .box-card {
-            margin: 5px;
-            max-width: 400px;
-            min-width: 300px;
-
-        }
-
-        .el-button-group {
-            float: right;
-        }
-        i.el-icon-delete{
-            pointer-events: none;
-        }
-    </style>
+    <link href="/css/styles.css" rel="stylesheet">
 </head>
 
 <body>
     <el-container id="app">
-
         <el-header style="font-size:40px;  ">TASKER</el-header>
         <el-main>
 
             <el-form style="max-width: 400px;position: relative;margin:0px auto;padding:20px;">
                 <el-form-item label="Название">
-                    <el-input v-model="controls.label" name="label"></el-input>
+                    <el-input name="label" v-model="controls.label"></el-input>
                 </el-form-item>
                 <el-form-item label="Описание задачи">
                     <el-input name="text" type="textarea" v-model="controls.text"></el-input>
@@ -68,7 +39,7 @@
                             <el-col :span="12">
                                 <div class="grid-content bg-purple-light">
                                     <el-button-group>
-                                        <el-button type="primary" icon="el-icon-edit"></el-button>
+                                        <el-button type="primary" disabled icon="el-icon-edit"></el-button>
                                         <el-button type="danger" icon="el-icon-delete" @click="deleteTask"
                                             v-bind:value="value._id"></el-button>
 
@@ -79,8 +50,8 @@
 
                         <p>{{ value.text }}</p>
                         <div>
-
-                            {{new Date(value.date).getHours()}}:{{new Date(value.date).getMinutes()}}
+                            {{new Date(value.date).getHours()}}:
+                            {{new Date(value.date).getMinutes() > 10 ? new Date(value.date).getMinutes() : '0' + new Date(value.date).getMinutes()}}
                             {{new Date(value.date).getDate() > 10 ? new Date(value.date).getDate():'0' + new Date(value.date).getDate()}}.{{new Date(value.date).getMonth() > 10 ? new Date(value.date).getMonth():'0' + (new Date(value.date).getMonth() + 1)}}.{{new Date(value.date).getFullYear() }}
                         </div>
 
@@ -88,95 +59,10 @@
                 </div>
             </div>
 
-            <el-main>
+        </el-main>
     </el-container>
+    <script src="/js/index.js"></script>
 
 </body>
-<script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            res: '',
-            controls: {
-                login: '',
-                password: ''
-            }
-        },
-        async created() {
-            this.res = await this.fetchData()
-        },
-        methods: {
-            deleteTask: function (e) {
-                let data = {id : e.target.value }
-                fetch('/api/delTask', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                this.getData()
-            },
-            fetchData: async function () {
-                let res = await fetch('/getTasks')
-                let data = await res.json()
-                return data.reverse()
-            },
-            sendData: function (label, text) {
-                let data = {
-                    label: label,
-                    text: text,
-                    date: new Date()
-                }
-                fetch('/api/addTask', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                this.getData()
-
-            },
-            getData: async function () {
-                this.res = await this.fetchData()
-            },
-            clearForm: function () {
-                this.controls.label = ''
-                this.controls.text = ''
-            },
-            checkForm: function (e) {
-
-
-                if (!this.controls.label && !this.text) {
-                    this.errorMessage('Заполните форму')
-                    return
-                }
-                if (!this.controls.label) {
-                    this.errorMessage('Введите название задачи')
-                }
-                if (!this.controls.text) {
-                    this.errorMessage('Введите название задачи')
-                }
-                if (this.controls.label && this.controls.text) {
-                    this.sendData(this.controls.label, this.controls.text)
-                    this.clearForm()
-                    this.successMessage()
-                }
-                e.preventDefault();
-            },
-            errorMessage(err) {
-                this.$message(err);
-            },
-            successMessage() {
-                this.$notify({
-                    title: 'Added',
-                    message: `Task successful added`,
-                    type: 'success'
-                });
-            },
-        }
-    })
-</script>
 
 </html>
