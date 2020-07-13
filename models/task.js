@@ -2,10 +2,16 @@ const { Schema, model } = require('mongoose')
 
 const taskSchema = new Schema({
   label: {
-    type: String
+    type: String,
+    required: true
   },
   text: {
-    type: String
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
   }
 
 })

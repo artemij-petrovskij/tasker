@@ -7,6 +7,7 @@ router.post('/addTask',async function(req, res) {
     const task = new Task({
         label: req.body.label,
         text: req.body.text,
+        date: req.body.date
     })
 
     try{
