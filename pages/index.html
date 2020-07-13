@@ -14,6 +14,10 @@
             font-family: 'Podkova', serif;
         }
 
+        #app {
+            width: 100%;
+        }
+
         .tasks {
             display: flex;
             flex-wrap: wrap;
@@ -22,9 +26,16 @@
 
         .box-card {
             margin: 5px;
-            max-width: 500px;
-            min-width: 500px;
+            max-width: 400px;
+            min-width: 300px;
 
+        }
+
+        .el-button-group {
+            float: right;
+        }
+        i.el-icon-delete{
+            pointer-events: none;
         }
     </style>
 </head>
@@ -48,13 +59,31 @@
             <div class="tasks">
                 <div v-for="value in res" class="text item">
                     <el-card class="box-card">
-                        <h3>{{ value.label }}</h3>
+                        <el-row>
+                            <el-col :span="12">
+                                <div class="grid-content bg-purple">
+                                    <h3>{{ value.label }}</h3>
+                                </div>
+                            </el-col>
+                            <el-col :span="12">
+                                <div class="grid-content bg-purple-light">
+                                    <el-button-group>
+                                        <el-button type="primary" icon="el-icon-edit"></el-button>
+                                        <el-button type="danger" icon="el-icon-delete" @click="deleteTask"
+                                            v-bind:value="value._id"></el-button>
+
+                                    </el-button-group>
+                                </div>
+                            </el-col>
+                        </el-row>
+
                         <p>{{ value.text }}</p>
-                        <span>
+                        <div>
 
                             {{new Date(value.date).getHours()}}:{{new Date(value.date).getMinutes()}}
                             {{new Date(value.date).getDate() > 10 ? new Date(value.date).getDate():'0' + new Date(value.date).getDate()}}.{{new Date(value.date).getMonth() > 10 ? new Date(value.date).getMonth():'0' + (new Date(value.date).getMonth() + 1)}}.{{new Date(value.date).getFullYear() }}
-                        </span>
+                        </div>
+
                     </el-card>
                 </div>
             </div>
@@ -69,16 +98,24 @@
         data: {
             res: '',
             controls: {
-                login: "",
-                password: ""
+                login: '',
+                password: ''
             }
         },
         async created() {
             this.res = await this.fetchData()
         },
         methods: {
-            eMessage(err) {
-                this.$message(err);
+            deleteTask: function (e) {
+                let data = {id : e.target.value }
+                fetch('/api/delTask', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                this.getData()
             },
             fetchData: async function () {
                 let res = await fetch('/getTasks')
@@ -86,7 +123,6 @@
                 return data.reverse()
             },
             sendData: function (label, text) {
-
                 let data = {
                     label: label,
                     text: text,
@@ -113,32 +149,34 @@
 
 
                 if (!this.controls.label && !this.text) {
-                    this.eMessage('Заполните форму')
+                    this.errorMessage('Заполните форму')
                     return
                 }
                 if (!this.controls.label) {
-                    this.eMessage('Введите название задачи')
+                    this.errorMessage('Введите название задачи')
                 }
                 if (!this.controls.text) {
-                    this.eMessage('Введите название задачи')
+                    this.errorMessage('Введите название задачи')
                 }
                 if (this.controls.label && this.controls.text) {
                     this.sendData(this.controls.label, this.controls.text)
                     this.clearForm()
-                    this.success()
+                    this.successMessage()
                 }
                 e.preventDefault();
             },
-            success() {
+            errorMessage(err) {
+                this.$message(err);
+            },
+            successMessage() {
                 this.$notify({
                     title: 'Added',
-                    message: 'Task:'+this.controls.label+' successful added',
+                    message: `Task successful added`,
                     type: 'success'
                 });
             },
         }
     })
-
 </script>
 
 </html>

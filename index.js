@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const mainRoute = require('./routes/main')
 const getTask = require('./routes/posts')
 const addTask = require('./routes/create')
+const delTask = require('./routes/delete.js')
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -16,6 +17,7 @@ app.use(bodyParser.json())
 app.use('/', mainRoute)
 app.use('/', getTask)
 app.use('/api', addTask)
+app.use('/api', delTask)
 
 
 const PORT = process.env.PORT || 3000
