@@ -11,7 +11,7 @@ var app = new Vue({
         this.res = await this.fetchData()
     },
     methods: {
-    
+
         fetchData: async function () {
             let res = await fetch('/getTasks')
             let data = await res.json()
@@ -33,8 +33,8 @@ var app = new Vue({
             this.getData()
 
         },
-        deleteTask1: function (e) {
-            let data = {id : e.target.value }
+        deleteTask: function (e) {
+            let data = { id: e.target.value }
             fetch('/api/delTask', {
                 method: 'POST',
                 body: JSON.stringify(data),
@@ -72,23 +72,25 @@ var app = new Vue({
             }
             e.preventDefault();
         },
-        deleteTask() {
+        deleteTaskTEST() {
             this.$confirm('Удалить задачу?', 'Предупреждение', {
-              confirmButtonText: 'OK',
-              cancelButtonText: 'Cancel',
-              type: 'warning'
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
             }).then(() => {
-              this.$message({
-                type: 'success',
-                message: 'Delete completed'
-              });
+                this.deleteTask1()
+                this.$message({
+                    type: 'success',
+                    message: 'Delete completed'
+                });
+               
             }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: 'Delete canceled'
-              });          
+                this.$message({
+                    type: 'info',
+                    message: 'Delete canceled'
+                });
             });
-          },
+        },
         errorMessage(err) {
             this.$message(err);
         },
