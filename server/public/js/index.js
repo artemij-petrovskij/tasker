@@ -1,14 +1,11 @@
 var app = new Vue({
-    el: '#app',
+    el: '#form',
     data: {
         res: '',
         controls: {
             label: '',
             text: ''
         }
-    },
-    async created() {
-        this.res = await this.fetchData()
     },
     methods: {
 
@@ -33,23 +30,6 @@ var app = new Vue({
             this.getData()
 
         },
-        deleteTask: function (e) {
-            let data = { id: e.target.value }
-            fetch('/api/delTask', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            let test = `Задача удалена`
-            console.log(this.controls.text)
-            this.successMessage(test)
-            this.getData()
-        },
-        getData: async function () {
-            this.res = await this.fetchData()
-        },
         clearForm: function () {
             this.controls.label = ''
             this.controls.text = ''
@@ -71,6 +51,56 @@ var app = new Vue({
                 this.successMessage(`Задача добавлена`)
             }
             e.preventDefault();
+        },
+        getData: async function () {
+            this.res = await this.fetchData()
+        },
+        errorMessage(err) {
+            this.$message(err);
+        },
+        successMessage(message) {
+         
+            this.$notify({
+                title: 'Готово!',
+                message: message,
+                type: 'success'
+            });
+        },
+    }
+})
+
+
+
+var app2 = new Vue({
+    el: '#tasks-output',
+    data: {
+        res: ''
+    },
+    async created() {
+        this.res = await this.fetchData()
+    },
+    methods: {
+
+        fetchData: async function () {
+            let res = await fetch('/getTasks')
+            let data = await res.json()
+            return data.reverse()
+        },
+        deleteTask: function (e) {
+            let data = { id: e.target.value }
+            fetch('/api/delTask', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+    
+            this.successMessage(`Задача удалена`)
+            this.getData()
+        },
+        getData: async function () {
+            this.res = await this.fetchData()
         },
         deleteTaskTEST() {
             this.$confirm('Удалить задачу?', 'Предупреждение', {
@@ -95,7 +125,7 @@ var app = new Vue({
             this.$message(err);
         },
         successMessage(message) {
-            console.log(message)
+         
             this.$notify({
                 title: 'Готово!',
                 message: message,

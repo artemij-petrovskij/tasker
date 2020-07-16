@@ -2,11 +2,11 @@ body {
     font-family: 'Podkova', serif;
 }
 
-#app {
+#form {
     width: 100%;
 }
 
-.tasks {
+#tasks-output {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

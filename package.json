@@ -4,8 +4,8 @@
   "description": "task-app",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
+    "start": "node server/index",
+    "dev": "nodemon server/index"
   },
   "repository": {
     "type": "git",

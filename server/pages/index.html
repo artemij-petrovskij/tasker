@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasker</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Podkova:wght@500&display=swap" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <el-header style="font-size:40px; ">TASKER</el-header>
+    <el-main>
+
+
+        <el-container id="form">
+            <el-form style="max-width: 400px;position: relative;margin:0px auto;padding:20px;">
+                <el-form-item label="Название">
+                    <el-input name="label" v-model="controls.label"></el-input>
+                </el-form-item>
+                <el-form-item label="Описание задачи">
+                    <el-input name="text" type="textarea" v-model="controls.text"></el-input>
+                </el-form-item>
+                <el-button type="primary" @click="checkForm" spellcheck="true" style="width: 100%;">Task!</el-button>
+            </el-form>
+        </el-container>
+
+
+        <el-container id="tasks-output">
+            <div v-for="value in res" class="text item">
+                <el-card class="box-card">
+                    <el-row>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple">
+                                <h3>{{ value.label }}</h3>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-light">
+                                <el-button-group>
+                                    <el-button type="primary" disabled icon="el-icon-edit"></el-button>
+                                    <el-button type="danger" icon="el-icon-delete" @click="deleteTask"
+                                        v-bind:value="value._id"></el-button>
+
+                                </el-button-group>
+                            </div>
+                        </el-col>
+                    </el-row>
+
+                    <p>{{ value.text }}</p>
+                    <div>
+                        {{new Date(value.date).getHours()}}:{{new Date(value.date).getMinutes() > 10 ? new Date(value.date).getMinutes() : '0' + new Date(value.date).getMinutes()}}
+                        {{new Date(value.date).getDate() > 10 ? new Date(value.date).getDate():'0' + new Date(value.date).getDate()}}.{{new Date(value.date).getMonth() > 10 ? new Date(value.date).getMonth():'0' + (new Date(value.date).getMonth() + 1)}}.{{new Date(value.date).getFullYear() }}
+                    </div>
+
+                </el-card>
+            </div>
+        </el-container>
+
+
+
+    </el-main>
+
+    <script src="/js/index.js"></script>
+
+</body>
+
+</html>
