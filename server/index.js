@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const mainRoute = require('./routes/main')
 const getTask = require('./routes/posts')
@@ -13,6 +14,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
  
 // parse application/json
 app.use(bodyParser.json())
+
+app.use(cors())
 
 app.use('/', mainRoute)
 app.use('/', getTask)
