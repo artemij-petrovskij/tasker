@@ -30,7 +30,6 @@
               <el-col :span="12">
                 <div class="grid-content bg-purple-light">
                   <el-button-group>
-                  
                     <el-button
                       type="danger"
                       icon="el-icon-delete"
@@ -43,7 +42,6 @@
             </el-row>
 
             <p>{{ post.text }}</p>
-            <p>{{post._id}}</p>
             <span>
               {{new Date(post.date).getHours()}}:{{new Date(post.date).getMinutes()}}
               {{new Date(post.date).getDate() > 10 ? new Date(post.date).getDate():'0' + new Date(post.date).getDate()}}.{{new Date(post.date).getMonth() > 10 ? new Date(post.date).getMonth():'0' + (new Date(post.date).getMonth() + 1)}}.{{new Date(post.date).getFullYear() }}
@@ -104,18 +102,23 @@ export default {
       }
 
       if (!this.controls.label) {
-        this.eMessage("Введите название задачи");
+        this.eMessage("Введите название задачи")
       }
 
       if (!this.controls.text) {
-        this.eMessage("Введите описание задачи");
+        this.eMessage("Введите описание задачи")
       }
       if (this.controls.label && this.controls.text) {
-        this.createTask(this.controls.label, this.controls.text);
-        this.success();
+        this.createTask(this.controls.label, this.controls.text)
+        this.clearForm()
+        this.success()
       }
 
-      e.preventDefault();
+      e.preventDefault()
+    },
+    clearForm() {
+      this.controls.label = "";
+      this.controls.text = "";
     },
     success() {
       this.$notify({
@@ -137,7 +140,9 @@ export default {
   flex-wrap: wrap;
   justify-content: center;
 }
-
+h3 {
+  margin-top: 0px;
+}
 .box-card {
   margin: 5px;
   max-width: 400px;
