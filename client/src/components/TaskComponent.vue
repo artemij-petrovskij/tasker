@@ -21,8 +21,29 @@
           v-bind:key="post._id"
         >
           <el-card class="box-card">
-            <h3>{{ post.label }}</h3>
+            <el-row>
+              <el-col :span="12">
+                <div class="grid-content bg-purple">
+                  <h3>{{ post.label }}</h3>
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div class="grid-content bg-purple-light">
+                  <el-button-group>
+                  
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      @click="deleteTask(post._id)"
+                      v-bind:value="post._id"
+                    ></el-button>
+                  </el-button-group>
+                </div>
+              </el-col>
+            </el-row>
+
             <p>{{ post.text }}</p>
+            <p>{{post._id}}</p>
             <span>
               {{new Date(post.date).getHours()}}:{{new Date(post.date).getMinutes()}}
               {{new Date(post.date).getDate() > 10 ? new Date(post.date).getDate():'0' + new Date(post.date).getDate()}}.{{new Date(post.date).getMonth() > 10 ? new Date(post.date).getMonth():'0' + (new Date(post.date).getMonth() + 1)}}.{{new Date(post.date).getFullYear() }}
@@ -59,15 +80,20 @@ export default {
     }
   },
   methods: {
-    eMessage(err) {
-      this.$message(err);
-    },
-    async sendData(label, text) {
+    async createTask(label, text) {
       let data = {
         label: label,
         text: text
       };
       await TaskService.insertTask(data);
+      const response = await TaskService.getTasks();
+      this.tasks = response.reverse();
+    },
+    async deleteTask(e) {
+      let data = {
+        id: e
+      };
+      await TaskService.deleteTask(data);
       const response = await TaskService.getTasks();
       this.tasks = response.reverse();
     },
@@ -85,7 +111,7 @@ export default {
         this.eMessage("Введите описание задачи");
       }
       if (this.controls.label && this.controls.text) {
-        this.sendData(this.controls.label, this.controls.text);
+        this.createTask(this.controls.label, this.controls.text);
         this.success();
       }
 
@@ -97,12 +123,15 @@ export default {
         message: "Task:" + this.controls.label + " successful added",
         type: "success"
       });
+    },
+    eMessage(err) {
+      this.$message(err);
     }
   }
 };
 </script>
 
-<style scoped>
+<style>
 .tasks {
   display: flex;
   flex-wrap: wrap;
@@ -115,9 +144,9 @@ export default {
   min-width: 300px;
 }
 .el-button-group {
-            float: right;
-        }
-        i.el-icon-delete{
-            pointer-events: none;
-        }
+  float: right;
+}
+i.el-icon-delete {
+  pointer-events: none !important;
+}
 </style>

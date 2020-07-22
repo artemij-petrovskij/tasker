@@ -10,7 +10,7 @@ const delTask = require('./routes/delete.js')
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
- 
+
 // parse application/json
 app.use(bodyParser.json())
 
@@ -20,11 +20,15 @@ app.use('/api', getTask)
 app.use('/api', addTask)
 app.use('/api', delTask)
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(__dirname + '/public/'))
+    app.get(/.*/, (req, res) => res.sendFile(__dirname+'/public/index.html'))
+}
 
 const PORT = process.env.PORT || 3000
 let PASS = process.env.MONGO_DB_PASS
 
-if(!!!PASS){
+if (!!!PASS) {
     const config = require('./config')
     PASS = config.password
 }
@@ -41,7 +45,7 @@ async function start() {
         app.listen(PORT, () => {
             console.log(`Server start on port ${PORT}`)
         })
-    } catch(e){
+    } catch (e) {
         console.log(e)
     }
 }
