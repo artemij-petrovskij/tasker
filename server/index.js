@@ -16,7 +16,7 @@ app.use(bodyParser.json())
 
 app.use(cors())
 
-app.use('/', getTask)
+app.use('/api', getTask)
 app.use('/api', addTask)
 app.use('/api', delTask)
 
