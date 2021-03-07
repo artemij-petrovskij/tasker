@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/task')
 
+const date = require('../functions/date')
+
 router.post('/addTask', async function (req, res) {
 
 
@@ -9,7 +11,7 @@ router.post('/addTask', async function (req, res) {
         await Task.create({
             label: req.body.label,
             text: req.body.text,
-            date: new Date()
+            date: date.formattedDate()
         })
         res.status(201).send()
     }
